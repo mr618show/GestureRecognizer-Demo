@@ -10,16 +10,24 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var binView: UIImageView!
+    @IBOutlet weak var basketballView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        let recognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(sender:)))
+        basketballView.isUserInteractionEnabled = true
+        basketballView.addGestureRecognizer(recognizer)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @objc func handlePan(sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: view)
+        if sender.state == .changed {
+            basketballView.center = CGPoint(x: basketballView.center.x + translation.x, y: basketballView.center.y + translation.y)
+            sender.setTranslation(CGPoint.zero, in: view)
+        } else if sender.state == .ended { if binView.frame.intersects((sender.view?.frame)!) {
+            basketballView.removeFromSuperview()
+            }
+        }
     }
-
-
 }
 
